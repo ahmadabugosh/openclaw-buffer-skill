@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import {
   createCli,
   formatProfiles,
@@ -81,6 +84,30 @@ describe('buffer CLI', () => {
       queue: false,
       scheduledAt: '2026-03-03T14:00:00.000Z',
     });
+  });
+
+  it('creates a post with --image when file exists', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'buffer-cli-image-'));
+    const imagePath = join(dir, 'photo.jpg');
+    writeFileSync(imagePath, 'fake-image-bytes');
+
+    const createPost = vi.fn().mockResolvedValue({
+      id: 'post_22',
+      text: 'With image',
+      profiles: [{ service: 'twitter' }],
+    });
+    const cli = createCli({ api: { createPost } });
+
+    await cli.parseAsync(['node', 'buffer', 'post', 'With image', '--profile', 'twitter_id', '--image', imagePath]);
+
+    expect(createPost).toHaveBeenCalledWith({
+      text: 'With image',
+      profileIds: ['twitter_id'],
+      queue: false,
+      media: [{ filePath: imagePath }],
+    });
+
+    rmSync(dir, { recursive: true, force: true });
   });
 
   it('uses all connected profiles with --all', async () => {

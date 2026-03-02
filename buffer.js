@@ -6,7 +6,12 @@ import ora from 'ora';
 import { getConfig } from './lib/config.js';
 import { validateApiKey } from './lib/auth.js';
 import { BufferApi } from './lib/buffer-api.js';
-import { parseProfilesList, parseScheduleTime, validatePostText } from './lib/utils.js';
+import {
+  parseProfilesList,
+  parseScheduleTime,
+  validatePostText,
+  validateImagePath,
+} from './lib/utils.js';
 
 export function formatProfiles(profiles) {
   if (!profiles.length) {
@@ -138,6 +143,7 @@ export function createCli({ api } = {}) {
     .option('--all', 'Post to all connected profiles')
     .option('--time <datetime>', 'Schedule post for an ISO datetime')
     .option('--queue', 'Add to queue')
+    .option('--image <path>', 'Attach an image from local file path')
     .option('--draft', 'Create as idea/draft instead of post')
     .action(async (text, options) => {
       const spinner = ora(options.draft ? 'Saving idea...' : 'Creating post...').start();
@@ -156,11 +162,19 @@ export function createCli({ api } = {}) {
         }
 
         const scheduledAt = parseScheduleTime(options.time);
+        const imagePath = validateImagePath(options.image);
         const input = {
           text: normalizedText,
           profileIds,
           queue: Boolean(options.queue),
           ...(scheduledAt ? { scheduledAt } : {}),
+          ...(imagePath
+            ? {
+                // BLOCKED: Buffer GraphQL local upload flow is undocumented in public beta docs.
+                // TODO: revisit and switch to official upload mechanism once confirmed.
+                media: [{ filePath: imagePath }],
+              }
+            : {}),
         };
 
         const createdPost = await activeApi.createPost(input);

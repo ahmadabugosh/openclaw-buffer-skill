@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { parseScheduleTime, parseProfilesList, validatePostText } from '../lib/utils.js';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import {
+  parseScheduleTime,
+  parseProfilesList,
+  validatePostText,
+  validateImagePath,
+} from '../lib/utils.js';
 
 describe('utils', () => {
   describe('validatePostText', () => {
@@ -41,6 +49,26 @@ describe('utils', () => {
 
     it('throws when list is provided but empty after trimming', () => {
       expect(() => parseProfilesList(' ,  , ')).toThrow(/No valid profile IDs found/);
+    });
+  });
+
+  describe('validateImagePath', () => {
+    it('returns null when no path provided', () => {
+      expect(validateImagePath()).toBeNull();
+    });
+
+    it('returns resolved path when file exists', () => {
+      const dir = mkdtempSync(join(tmpdir(), 'buffer-image-'));
+      const file = join(dir, 'photo.jpg');
+      writeFileSync(file, 'fake-image-bytes');
+
+      expect(validateImagePath(file)).toContain('photo.jpg');
+
+      rmSync(dir, { recursive: true, force: true });
+    });
+
+    it('throws when file does not exist', () => {
+      expect(() => validateImagePath('/tmp/does-not-exist.jpg')).toThrow(/Image file not found/);
     });
   });
 });

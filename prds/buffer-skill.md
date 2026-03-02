@@ -55,7 +55,7 @@ Connected Profiles:
   - [x] `--all` - Post to all profiles
   - [x] `--time <datetime>` - Schedule for specific time (ISO 8601)
   - [x] `--queue` - Add to queue instead of immediate/scheduled
-  - [ ] `--image <path>` - Attach image (local file path)
+  - [x] `--image <path>` - Attach image (local file path)
   - [x] `--draft` - Create as idea/draft instead of post
 - [ ] Validate inputs (text length, file exists, etc.)
 - [x] Clear success messages with post IDs/URLs
@@ -332,7 +332,7 @@ Rose: *executes buffer post command*
 
 ### Phase 3: Images & Ideas (Tasks 21-28)
 21. Implement image upload support (if Buffer API supports it, or document limitation)
-22. Add `--image` option to post command
+22. [x] Add `--image` option to post command
 23. [x] Implement CreateIdea mutation
 24. [x] Add `--draft` option to post command
 25. [x] Implement `buffer ideas` command
@@ -352,7 +352,7 @@ Rose: *executes buffer post command*
 35. Add rate limit detection and friendly errors
 36. Add auth error handling (401, 403)
 37. Add input validation for all commands
-38. Add file existence check for images
+38. [x] Add file existence check for images
 39. Add date parsing validation
 40. Test all error scenarios
 
