@@ -56,7 +56,7 @@ Connected Profiles:
   - [x] `--time <datetime>` - Schedule for specific time (ISO 8601)
   - [x] `--queue` - Add to queue instead of immediate/scheduled
   - [ ] `--image <path>` - Attach image (local file path)
-  - [ ] `--draft` - Create as idea/draft instead of post
+  - [x] `--draft` - Create as idea/draft instead of post
 - [ ] Validate inputs (text length, file exists, etc.)
 - [x] Clear success messages with post IDs/URLs
 
@@ -98,9 +98,9 @@ Upcoming Posts (5):
 ```
 
 #### `buffer ideas`
-- [ ] List saved ideas/drafts
-- [ ] Show text preview, created date
-- [ ] Option: `--limit <n>`
+- [x] List saved ideas/drafts
+- [x] Show text preview, created date
+- [x] Option: `--limit <n>`
 
 ### 3. GraphQL Integration
 
@@ -155,7 +155,7 @@ Upcoming Posts (5):
   }
   ```
 
-- [ ] **Mutation: Create Idea**
+- [x] **Mutation: Create Idea**
   ```graphql
   mutation CreateIdea($input: CreateIdeaInput!) {
     createIdea(input: $input) {
@@ -165,7 +165,7 @@ Upcoming Posts (5):
   }
   ```
 
-- [ ] **Query: Get Ideas**
+- [x] **Query: Get Ideas**
   ```graphql
   query GetIdeas {
     ideas {
@@ -333,11 +333,11 @@ Rose: *executes buffer post command*
 ### Phase 3: Images & Ideas (Tasks 21-28)
 21. Implement image upload support (if Buffer API supports it, or document limitation)
 22. Add `--image` option to post command
-23. Implement CreateIdea mutation
-24. Add `--draft` option to post command
-25. Implement `buffer ideas` command
-26. Implement GetIdeas query
-27. Test idea creation
+23. [x] Implement CreateIdea mutation
+24. [x] Add `--draft` option to post command
+25. [x] Implement `buffer ideas` command
+26. [x] Implement GetIdeas query
+27. [x] Test idea creation
 28. Test image posting (or document workaround)
 
 ### Phase 4: Queue Management (Tasks 29-33)
@@ -357,9 +357,9 @@ Rose: *executes buffer post command*
 40. Test all error scenarios
 
 ### Phase 6: Testing (Tasks 41-48)
-41. Write API wrapper unit tests
+41. [x] Write API wrapper unit tests
 42. [x] Write utils unit tests
-43. Write CLI command tests
+43. [x] Write CLI command tests
 44. Write integration tests (mocked or real API)
 45. Ensure 80%+ coverage
 46. Fix failing tests

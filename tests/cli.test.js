@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createCli, formatProfiles, formatPostSuccess, formatQueuePosts } from '../buffer.js';
+import {
+  createCli,
+  formatProfiles,
+  formatPostSuccess,
+  formatQueuePosts,
+  formatIdeas,
+} from '../buffer.js';
 
 describe('buffer CLI', () => {
   let logSpy;
@@ -115,6 +121,32 @@ describe('buffer CLI', () => {
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Upcoming Posts (1)'));
   });
 
+  it('creates an idea when --draft is passed', async () => {
+    const createIdea = vi.fn().mockResolvedValue({ id: 'idea_1', text: 'Draft idea' });
+    const cli = createCli({ api: { createIdea } });
+
+    await cli.parseAsync(['node', 'buffer', 'post', 'Draft idea', '--profile', 'twitter_profile_id', '--draft']);
+
+    expect(createIdea).toHaveBeenCalledWith({
+      text: 'Draft idea',
+      profileIds: ['twitter_profile_id'],
+    });
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Idea saved successfully'));
+  });
+
+  it('executes ideas command with limit', async () => {
+    const getIdeas = vi.fn().mockResolvedValue([
+      { id: 'idea_1', text: 'Idea one', createdAt: '2026-03-02T12:00:00.000Z' },
+      { id: 'idea_2', text: 'Idea two', createdAt: '2026-03-02T13:00:00.000Z' },
+    ]);
+    const cli = createCli({ api: { getIdeas } });
+
+    await cli.parseAsync(['node', 'buffer', 'ideas', '--limit', '1']);
+
+    expect(getIdeas).toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Saved Ideas (1)'));
+  });
+
   it('formats queue output', () => {
     const output = formatQueuePosts([
       {
@@ -140,5 +172,14 @@ describe('buffer CLI', () => {
     expect(output).toContain('Post created successfully');
     expect(output).toContain('post_123');
     expect(output).toContain('Twitter');
+  });
+
+  it('formats ideas output', () => {
+    const output = formatIdeas([
+      { id: 'idea_1', text: 'New campaign concept', createdAt: '2026-03-02T10:00:00.000Z' },
+    ]);
+
+    expect(output).toContain('Saved Ideas (1)');
+    expect(output).toContain('New campaign concept');
   });
 });

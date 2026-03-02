@@ -1,5 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { BufferApi, CREATE_POST_MUTATION, GET_SCHEDULED_POSTS_QUERY } from '../lib/buffer-api.js';
+import {
+  BufferApi,
+  CREATE_POST_MUTATION,
+  GET_SCHEDULED_POSTS_QUERY,
+  CREATE_IDEA_MUTATION,
+  GET_IDEAS_QUERY,
+} from '../lib/buffer-api.js';
 
 describe('BufferApi', () => {
   it('returns profiles from GraphQL response', async () => {
@@ -76,6 +82,55 @@ describe('BufferApi', () => {
     expect(post).toHaveBeenCalledWith('', {
       query: GET_SCHEDULED_POSTS_QUERY,
       variables: { profileId: 'profile_1' },
+    });
+  });
+
+  it('creates an idea with GraphQL mutation', async () => {
+    const post = vi.fn().mockResolvedValue({
+      data: {
+        data: {
+          createIdea: {
+            id: 'idea_123',
+            text: 'Draft post idea',
+          },
+        },
+      },
+    });
+
+    const api = new BufferApi(
+      { apiKey: 'valid_api_key_12345', apiUrl: 'https://api.buffer.com/graphql' },
+      { post },
+    );
+
+    const input = { text: 'Draft post idea', profileIds: ['p1'] };
+    const result = await api.createIdea(input);
+
+    expect(result.id).toBe('idea_123');
+    expect(post).toHaveBeenCalledWith('', {
+      query: CREATE_IDEA_MUTATION,
+      variables: { input },
+    });
+  });
+
+  it('gets ideas list', async () => {
+    const post = vi.fn().mockResolvedValue({
+      data: {
+        data: {
+          ideas: [{ id: 'idea_1', text: 'Ship launch post', createdAt: '2026-03-02T22:00:00Z' }],
+        },
+      },
+    });
+
+    const api = new BufferApi(
+      { apiKey: 'valid_api_key_12345', apiUrl: 'https://api.buffer.com/graphql' },
+      { post },
+    );
+
+    const result = await api.getIdeas();
+    expect(result).toHaveLength(1);
+    expect(post).toHaveBeenCalledWith('', {
+      query: GET_IDEAS_QUERY,
+      variables: {},
     });
   });
 

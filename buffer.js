@@ -60,6 +60,34 @@ export function formatQueuePosts(posts) {
   return lines.join('\n').trimEnd();
 }
 
+export function formatIdeaSuccess(idea) {
+  return [
+    `${chalk.green('✅')} Idea saved successfully`,
+    `ID: ${idea.id || 'n/a'}`,
+    `Text: ${(idea.text || '').trim() || 'n/a'}`,
+  ].join('\n');
+}
+
+export function formatIdeas(ideas) {
+  if (!ideas.length) {
+    return 'No saved ideas found.';
+  }
+
+  const lines = [`Saved Ideas (${ideas.length}):`, ''];
+
+  ideas.forEach((idea, index) => {
+    const text = (idea.text || '').trim();
+    const preview = text.length > 80 ? `${text.slice(0, 77)}...` : text;
+    const createdAt = idea.createdAt ? new Date(idea.createdAt).toISOString() : 'n/a';
+
+    lines.push(`${index + 1}. "${preview}"`);
+    lines.push(`   Created: ${createdAt}`);
+    lines.push('');
+  });
+
+  return lines.join('\n').trimEnd();
+}
+
 function resolveProfileIds(options, profiles = []) {
   if (options.profile) {
     return [options.profile];
@@ -110,16 +138,24 @@ export function createCli({ api } = {}) {
     .option('--all', 'Post to all connected profiles')
     .option('--time <datetime>', 'Schedule post for an ISO datetime')
     .option('--queue', 'Add to queue')
+    .option('--draft', 'Create as idea/draft instead of post')
     .action(async (text, options) => {
-      const spinner = ora('Creating post...').start();
+      const spinner = ora(options.draft ? 'Saving idea...' : 'Creating post...').start();
       try {
         const activeApi = api || new BufferApi({ ...getConfig(), apiKey: validateApiKey(getConfig().apiKey) });
         const normalizedText = validatePostText(text);
-        const scheduledAt = parseScheduleTime(options.time);
 
         const profiles = options.all ? await activeApi.getProfiles() : [];
         const profileIds = resolveProfileIds(options, profiles);
 
+        if (options.draft) {
+          const createdIdea = await activeApi.createIdea({ text: normalizedText, profileIds });
+          spinner.stop();
+          console.log(formatIdeaSuccess(createdIdea));
+          return;
+        }
+
+        const scheduledAt = parseScheduleTime(options.time);
         const input = {
           text: normalizedText,
           profileIds,
@@ -131,7 +167,7 @@ export function createCli({ api } = {}) {
         spinner.stop();
         console.log(formatPostSuccess(createdPost));
       } catch (error) {
-        spinner.fail('Failed to create post');
+        spinner.fail(options.draft ? 'Failed to save idea' : 'Failed to create post');
         console.error(chalk.red(`\n❌ ${error.message}`));
         process.exitCode = 1;
       }
@@ -154,6 +190,27 @@ export function createCli({ api } = {}) {
         console.log(formatQueuePosts(limited));
       } catch (error) {
         spinner.fail('Failed to fetch queue');
+        console.error(chalk.red(`\n❌ ${error.message}`));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command('ideas')
+    .description('List saved ideas/drafts')
+    .option('--limit <n>', 'Limit number of ideas shown', '10')
+    .action(async (options) => {
+      const spinner = ora('Fetching saved ideas...').start();
+      try {
+        const activeApi = api || new BufferApi({ ...getConfig(), apiKey: validateApiKey(getConfig().apiKey) });
+        const ideas = await activeApi.getIdeas();
+        const limit = Number.parseInt(options.limit, 10);
+
+        const limited = Number.isNaN(limit) || limit <= 0 ? ideas : ideas.slice(0, limit);
+        spinner.stop();
+        console.log(formatIdeas(limited));
+      } catch (error) {
+        spinner.fail('Failed to fetch ideas');
         console.error(chalk.red(`\n❌ ${error.message}`));
         process.exitCode = 1;
       }
