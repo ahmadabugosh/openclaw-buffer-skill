@@ -27,17 +27,17 @@ All features complete and tested by end of day (March 3, 2026).
 ## Core Features
 
 ### 1. Authentication & Setup
-- [ ] Store API key securely (`.env` file or config)
-- [ ] Validate API key on first use
-- [ ] Clear error messages for auth failures
-- [ ] `.env.example` template for users
+- [x] Store API key securely (`.env` file or config)
+- [x] Validate API key on first use
+- [x] Clear error messages for auth failures
+- [x] `.env.example` template for users
 
 ### 2. CLI Commands
 
 #### `buffer profiles`
-- [ ] List all connected social media profiles
-- [ ] Show profile ID, service name, username
-- [ ] Format output clearly (table or list)
+- [x] List all connected social media profiles
+- [x] Show profile ID, service name, username
+- [x] Format output clearly (table or list)
 
 **Example output:**
 ```
@@ -105,16 +105,16 @@ Upcoming Posts (5):
 ### 3. GraphQL Integration
 
 #### API Wrapper (`lib/buffer-api.js`)
-- [ ] GraphQL client setup
-- [ ] Authentication header injection
-- [ ] Error handling for:
-  - Network errors
-  - API errors (rate limits, invalid token, etc.)
-  - Validation errors
-- [ ] Rate limit handling (60 req/min per Buffer docs)
+- [x] GraphQL client setup
+- [x] Authentication header injection
+- [x] Error handling for:
+  - [x] Network errors
+  - [x] API errors (rate limits, invalid token, etc.)
+  - [x] Validation errors
+- [x] Rate limit handling (60 req/min per Buffer docs)
 
 #### Required GraphQL Operations
-- [ ] **Query: Get Profiles**
+- [x] **Query: Get Profiles**
   ```graphql
   query GetProfiles {
     profiles {
@@ -227,12 +227,12 @@ Need help? Visit: https://developers.buffer.com/
 ```
 
 ### 6. Testing
-- [ ] Unit tests for API wrapper
+- [x] Unit tests for API wrapper
 - [ ] Unit tests for utilities (date parsing, validation)
-- [ ] Integration tests with Buffer API (if possible, or mocked)
-- [ ] CLI command tests
+- [x] Integration tests with Buffer API (if possible, or mocked)
+- [x] CLI command tests
 - [ ] Minimum 80% code coverage
-- [ ] All tests passing
+- [x] All tests passing
 
 ### 7. Documentation
 
@@ -307,16 +307,16 @@ Rose: *executes buffer post command*
 ## Implementation Order
 
 ### Phase 1: Foundation (Tasks 1-10)
-1. Initialize project structure
-2. Set up package.json with dependencies
-3. Create `.env.example` and `.gitignore`
-4. Implement `lib/config.js` for API key management
-5. Implement `lib/auth.js` for validation
-6. Create basic CLI skeleton with Commander
-7. Implement `buffer profiles` command (basic version)
-8. Set up GraphQL client in `lib/buffer-api.js`
-9. Implement GetProfiles query
-10. Test profiles command end-to-end
+1. [x] Initialize project structure
+2. [x] Set up package.json with dependencies
+3. [x] Create `.env.example` and `.gitignore`
+4. [x] Implement `lib/config.js` for API key management
+5. [x] Implement `lib/auth.js` for validation
+6. [x] Create basic CLI skeleton with Commander
+7. [x] Implement `buffer profiles` command (basic version)
+8. [x] Set up GraphQL client in `lib/buffer-api.js`
+9. [x] Implement GetProfiles query
+10. [x] Test profiles command end-to-end
 
 ### Phase 2: Core Posting (Tasks 11-20)
 11. Implement `lib/utils.js` with date parsing and validation
