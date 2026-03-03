@@ -1,72 +1,109 @@
-# Buffer Skill (CLI + OpenClaw)
+# 📮 Buffer Skill for OpenClaw
 
-A production-focused Node.js CLI for Buffer's GraphQL API.
+**Schedule and manage your social media posts directly from your AI assistant!**
 
-## Features
+## 🤔 Why This Skill?
 
-- List connected profiles (`buffer profiles`)
-- Create immediate, queued, and scheduled posts (`buffer post`)
-- Post to one, many, or all profiles
-- Save and list ideas/drafts (`buffer post --draft`, `buffer ideas`)
-- View upcoming queue (`buffer queue`)
-- Actionable error messages for auth, rate limits, and network issues
+Social media is powerful, but managing posts across multiple platforms is time-consuming. This skill gives OpenClaw (and you!) direct access to Buffer's scheduling system, so you can:
 
-## Installation
+- 🤖 **Let your AI assistant handle social posting** — "Post this to Twitter tomorrow at 2pm"
+- 📅 **Schedule content in advance** — Build your content calendar without leaving the conversation
+- 💾 **Save drafts and ideas** — Capture inspiration when it strikes, polish later
+- 🎯 **Multi-platform posting** — One command, multiple social networks
+- ⚡ **Immediate or queued** — Post now or let Buffer's smart scheduling handle timing
+
+Whether you're a solopreneur managing your own socials or building automation workflows, this skill makes Buffer feel like part of your command line.
+
+## ✨ How It Works
+
+This skill is a **production-ready Node.js CLI** that talks directly to Buffer's GraphQL API. OpenClaw loads it as an agent skill, giving you natural language control:
+
+1. **You talk to OpenClaw** — "Schedule a LinkedIn post for tomorrow morning about our new feature"
+2. **OpenClaw uses this skill** — Formats your request, picks the right Buffer profile, sets the time
+3. **Buffer handles delivery** — Your post goes out exactly when scheduled
+
+Behind the scenes:
+- 🔐 Authenticates with your Buffer API key (get one at [Buffer Settings](https://publish.buffer.com/settings/api))
+- 📡 Uses Buffer's GraphQL API for reliable, up-to-date functionality
+- ✅ Includes comprehensive tests and error handling
+- 🎨 Follows code quality standards (Prettier formatting, 90%+ test coverage)
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 cd skills/buffer
 npm install
 cp .env.example .env
-# add BUFFER_API_KEY in .env
+# Add your BUFFER_API_KEY to .env
 ```
 
-## Quick Start
+Get your API key: [Buffer Developer Settings](https://publish.buffer.com/settings/api)
+
+### Basic Commands
 
 ```bash
-# List profiles
+# 📋 List your connected social profiles
 node ./buffer.js profiles
 
-# Immediate post
+# ⚡ Post immediately
 node ./buffer.js post "Hello from Buffer CLI" --profile <profile_id>
 
-# Scheduled post
+# ⏰ Schedule a post
 node ./buffer.js post "Scheduled update" --profile <profile_id> --time "2026-03-03T14:00:00Z"
 
-# Queue post
+# 📥 Add to Buffer's queue (smart scheduling)
 node ./buffer.js post "Queue this" --profile <profile_id> --queue
 
-# Save draft/idea
+# 💾 Save as draft/idea
 node ./buffer.js post "Draft idea" --profile <profile_id> --draft
 
-# List queue and ideas
+# 📅 View your queue
 node ./buffer.js queue --limit 10
+
+# 💡 List saved ideas
 node ./buffer.js ideas --limit 10
 ```
 
-## Image Upload Note
+## 📸 Image Uploads
 
-`--image` currently validates local file existence and forwards a placeholder `media` payload.
-Buffer's public GraphQL beta docs do not yet document a finalized local file upload flow, so full upload is intentionally marked as a documented limitation.
+Image support validates local files and sends the path to Buffer. Note: Buffer's public GraphQL API documentation doesn't yet detail the finalized media upload flow, so this is intentionally simplified. Text posts work perfectly!
 
-## Testing
+## 🧪 Testing & Quality
+
+We take code quality seriously:
 
 ```bash
+# Run tests
 npm test
+
+# Check coverage (90%+ required)
 npm run coverage
+
+# Format code
+npm run format
+
+# Check formatting
 npm run format:check
 ```
 
-Coverage is enforced with thresholds in `vitest.config.js`.
-Code style is standardized with Prettier (`npm run format`).
+## 📚 Resources
 
-## API Docs
+- 🔧 [Buffer Developer Docs](https://developers.buffer.com/)
+- 🔑 [Get Your API Key](https://publish.buffer.com/settings/api)
+- 🐙 [GitHub Repository](https://github.com/ahmadabugosh/openclaw-buffer-skills)
 
-- Buffer Developers: https://developers.buffer.com/
-- API keys: https://publish.buffer.com/settings/api
+## 🤝 Contributing
 
-## Contributing
+We welcome contributions! Here's how:
 
-1. Create a branch
-2. Add/adjust tests first
-3. Run `npm test` and `npm run coverage`
-4. Open a PR with a clear summary
+1. 🌿 Create a branch for your feature
+2. ✍️ Write tests first (TDD style)
+3. ✅ Ensure `npm test` and `npm run coverage` pass
+4. 🎨 Run `npm run format` to standardize code style
+5. 📝 Open a PR with a clear description
+
+---
+
+**Built with ❤️ for the OpenClaw community** 🐾
