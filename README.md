@@ -50,21 +50,51 @@ node ./buffer.js profiles
 # ⚡ Post immediately
 node ./buffer.js post "Hello from Buffer CLI" --profile <profile_id>
 
-# ⏰ Schedule a post
-node ./buffer.js post "Scheduled update" --profile <profile_id> --time "2026-03-03T14:00:00Z"
-
 # 📥 Add to Buffer's queue (smart scheduling)
 node ./buffer.js post "Queue this" --profile <profile_id> --queue
 
 # 💾 Save as draft/idea
 node ./buffer.js post "Draft idea" --profile <profile_id> --draft
 
-# 📅 View your queue
-node ./buffer.js queue --limit 10
-
 # 💡 List saved ideas
 node ./buffer.js ideas --limit 10
 ```
+
+### 📅 Scheduling Posts
+
+The Buffer skill offers multiple ways to schedule your content:
+
+**1️⃣ Immediate Posting** - Publish right now
+```bash
+node ./buffer.js post "Breaking news!" --profile <profile_id>
+```
+
+**2️⃣ Queue with Smart Scheduling** ⭐ **Recommended**
+Let Buffer automatically schedule your post at the optimal time based on your posting schedule:
+```bash
+node ./buffer.js post "Check out our new feature! 🚀" --profile <profile_id> --queue
+```
+
+**Real Example:**
+```bash
+# Get your profile ID first
+node ./buffer.js profiles
+# Output: ✓ twitter (n/a) - ID: 69a63bee3f3b94a1210d12b3
+
+# Queue a promotional tweet
+node ./buffer.js post "🤖 Learn how to connect OpenClaw to the X/Twitter API - complete guide with code examples! https://resources.learnopenclaw.ai/..." --profile 69a63bee3f3b94a1210d12b3 --queue
+```
+
+**3️⃣ Custom Time Scheduling** ⚠️ *Currently limited*
+```bash
+# Note: Custom scheduling via --time is currently limited by Buffer's GraphQL beta API
+node ./buffer.js post "Scheduled update" --profile <profile_id> --time "2026-03-03T14:00:00Z"
+```
+
+**💡 Pro Tips:**
+- Use `--queue` for hassle-free scheduling - Buffer picks the best time
+- Check your Buffer dashboard at https://publish.buffer.com to see queued posts
+- Save drafts with `--draft` and refine them later in Buffer's UI
 
 ## 📸 Image Uploads
 
